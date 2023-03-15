@@ -3,44 +3,28 @@ import sys
 import pprint
 from functools import partial
 
-# def read_json(filename):
-#     with open(filename) as f:
-#         parser = ijson.items(f, '')
-#         print("passed this")
-#         for obj in parser:
-#             print("got it")
-#             yield obj
 
-# def read_json(filename):
-#     with open(filename) as f:
-#         parser = ijson.parse(f)
-#         obj = {}
-#         for prefix, event, value in parser:
-#             if event == 'map_key':
-#                 obj[value] = next(parser)[1]
-#             elif event == 'end_map':
-#                 yield obj
-#                 obj = {}
-
-def json_parse(fileobj, decoder=json.JSONDecoder(), buffersize=2048):
-    buffer = ''
-    for chunk in iter(partial(fileobj.read, buffersize), ''):
-         buffer += chunk
-         while buffer:
-             try:
-                 result, index = decoder.raw_decode(buffer)
-                 yield result
-                 buffer = buffer[index:].lstrip()
-             except ValueError:
-                 # Not enough data to decode, read more
-                 break
-
+def parse_dblp_file(filename):
+    is_first_line = True
+    with open(filename) as f:
+        for line in f:
+            if is_first_line:
+                is_first_line = False
+                print('first line found')
+                continue
+            obj = line[:-2]
+            #obj = line
+            try:
+                yield json.loads(obj)
+            except json.decoder.JSONDecodeError:
+                print("paper skipped due to decoding error")
+                continue
 
 i = 0
-with open('dblp_v14.json') as f:
+for paper in parse_dblp_file('dblp_v14.json'):
+    #pprint.pprint(paper)
+    i += 1
+    if i % 100000 == 0:
+        print(i)
 
-    for paper in json_parse(f):
-        pprint.pprint(paper)
-        i += 1
-        if i == 10:
-            sys.exit()
+print(f"number of papers: {i}")

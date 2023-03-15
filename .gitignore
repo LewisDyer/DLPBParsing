@@ -1,2 +1,5 @@
 #very large dataset
 dblp_v14.json
+
+#split files
+/splits
