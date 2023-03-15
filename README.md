@@ -9,9 +9,15 @@ This file is very large, so it's not possible to import it directly into Arango:
 
 1. Create a new directory `splits`.
 
-2. Run the following command, splitting the dataset into 100 different files:
+2. Run the `split.bash` script to split up the dataset and format each of these files into JSON arrays, which can then be imported into ArangoDB.
 
-`$ split -l $(expr $(wc -l < dblp_v14.json) / 100 + 1) dblp_v14.json splits/file_`
+3. Run the `arango_import.bash` script to import that data into ArangoDB. Note it assumes you have a database called `DBLP_v14` with a `papers` collection and password `arangopass` - change as appropriate.
 
-3. Run the `fix_arrays.bash` script to format each of these files into JSON arrays, which can then be imported into ArangoDB.
+## TODO
 
+Queries:
+* Import Authors into separate collection
+* Import Venues into separate collection
+* Import Fields of Study into separate collection
+* Tidy up Papers collection
+* Add (all) edges

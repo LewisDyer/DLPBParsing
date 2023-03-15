@@ -1,0 +1,10 @@
+FOR p in papers
+    FILTER HAS(p, "fos")
+    FOR field IN p.fos
+        LET field_doc = FIRST(
+            for f in Field
+                FILTER f.name == field.name
+                RETURN f
+        )
+        FILTER field_doc == null
+        INSERT {name: field.name} INTO Field

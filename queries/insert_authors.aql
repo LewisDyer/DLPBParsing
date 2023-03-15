@@ -1,0 +1,13 @@
+FOR p IN papers
+  FOR author IN p.authors
+    LET author_doc = FIRST(
+      FOR a IN Author
+        FILTER a.id == author.id && a.name == author.name
+        RETURN a
+    )
+    FILTER author_doc == null
+    INSERT {
+      id: author.id,
+      name: author.name,
+      org: author.org
+    } INTO Author
