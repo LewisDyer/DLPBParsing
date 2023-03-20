@@ -1,0 +1,5 @@
+// replace key with paper ids
+FOR p IN papers
+    INSERT MERGE(p, { _key: p.id }) INTO Paper
+
+// 

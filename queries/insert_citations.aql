@@ -1,0 +1,4 @@
+FOR p IN Paper
+FILTER HAS(p, "references")
+FOR ref in p.references
+    INSERT {_from: p._id, _to: CONCAT("Paper/", ref)} INTO cites
